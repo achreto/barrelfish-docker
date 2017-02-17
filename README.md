@@ -10,7 +10,7 @@ Install docker on your machine:
 
 ```
 apt-get update
-apt-get -y install docker-engine
+apt-get -y install docker.io 
 ```
 
 Install Gitlab CI Multi-Runner
@@ -18,6 +18,11 @@ Install Gitlab CI Multi-Runner
 ```
 apt-get update
 apt-get install gitlab-ci-multi-runner
+```
+
+If this fails, you may need to add the gitlab repository
+```
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh | sudo bash
 ```
 
 Build the Docker image
@@ -30,7 +35,7 @@ docker build -t bf-gitlab-ci-runner .
 
 Register Gitlab Runner
 ---------------------
-i
+
 ```
 gitlab-ci-multi-runner register -non-interactive\
     --name bf-ci \
@@ -41,4 +46,15 @@ gitlab-ci-multi-runner register -non-interactive\
     -t $SERVER_TOKEN
 ```
 
+To find the local docker image, you will need to change the pull policy
+of the 
+
+/etc/gitlab-runner vim config.toml 
+
+```
+[[runners]]
+  [runners.docker]
+    pull_policy = "if-not-present"
+
+```
 
