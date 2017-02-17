@@ -34,12 +34,12 @@ docker build -t bf-gitlab-ci-runner .
 
 
 Register Gitlab Runner
----------------------
+----------------------
 
 ```
 gitlab-ci-multi-runner register -non-interactive\
     --name bf-ci \
-    -- executor docker \
+    --executor docker \
     --registration-token $TOKEN \
     --limit $LIMIT \
     --url $URL \
@@ -58,3 +58,20 @@ of the
 
 ```
 
+Mounting a local Git Repository
+-------------------------------
+Add the following to the runners.docker.volumes to mount a path on the host
+to a path in docker. It's important to set the mount to be read-only (:ro)
+
+```
+[[runners]]
+  [runners.docker]
+    volumes = ["/path/on/host/git:/git:ro"]
+```
+
+This enables to pull changes from this path, without allowing to modify the 
+repository.
+
+```
+git remote add other /git/other
+```
