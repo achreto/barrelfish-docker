@@ -1,34 +1,29 @@
-FROM ubuntu:xenial
+FROM ubuntu:18.04
 MAINTAINER Reto Achermann <reto.achermann@inf.ethz.ch>
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-             build-essential \
-             bison \
-             flex \
-             cmake \
-             qemu-system-x86 \
-             qemu-system-arm \
-             ghc \
-             libghc-src-exts-dev \
-             libghc-ghc-paths-dev \
-             libghc-parsec3-dev \
-             libghc-random-dev \
-             libghc-ghc-mtl-dev \
-             libghc-src-exts-dev \
-             libghc-async-dev \
-             gcc-arm-linux-gnueabi \
-             g++-arm-linux-gnueabi \
-             libgmp3-dev \
-             cabal-install \
-             curl \
-             freebsd-glue \
-             libelf-freebsd-dev \
-             libusb-1.0-0-dev \
-             qemu-utils \
-             gcc-aarch64-linux-gnu \
-             g++-aarch64-linux-gnu \
-             git \
-             && apt-get clean && rm -rf /var/lib/apt/lists/* \
-             && cabal update && cabal install bytestring-trie 
+COPY config.pp /config.pp
 
+# install dependencies for puppet
+RUN apt-get update && apt-get upgrade -y &&  \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            wget apt-utils 
+
+# install puppet
+RUN wget -q https://apt.puppetlabs.com/puppet6-release-bionic.deb \ 
+           -O puppetlabs-release-repo.deb
+RUN dpkg -i puppetlabs-release-repo.deb
+RUN rm -rf puppetlabs-release-repo.deb
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y puppet-agent
+
+
+# run module install on the puppet script
+RUN /opt/puppetlabs/bin/puppet module install \
+          --target-dir=/opt/puppetlabs/puppet/modules \
+          --modulepath /etc/puppetlabs/code/modules puppetlabs-vcsrepo
+
+
+# apply the puppet script etc. 
+RUN /opt/puppetlabs/bin/puppet apply --onetime --verbose \
+      --no-daemonize --no-usecacheonfailure --no-splay \
+      --show_diff /config.pp

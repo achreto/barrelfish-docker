@@ -6,11 +6,29 @@ code repositories.
 
 Bootstraping
 ------------
-Install docker on your machine:
+
+Install docker on your machine. Follow [Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+TL;DR
 
 ```
-apt-get update
-apt-get -y install docker.io 
+# remote the old docker
+sudo apt-get remove docker docker-engine docker.io
+# update apt 
+sudo apt-get update
+#install dependencies
+sudo apt-get install apt-transport-https ca-certificates \
+                     curl software-properties-common
+# install PGP key of docker                     
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# show the key
+sudo apt-key fingerprint 0EBFCD88
+# adding docker repository
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+sudo apt-get update  && sudo apt-get install docker-ce 
 ```
 
 Install Gitlab CI Multi-Runner
@@ -27,9 +45,14 @@ curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-
 
 Build the Docker image
 ----------------------
-Next we can build the 
+Next we can build the image. 
 ```
 docker build -t bf-gitlab-ci-runner .
+```
+
+Permission denied:
+```
+sudo usermod -a -G docker $USER
 ```
 
 
