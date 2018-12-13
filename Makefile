@@ -1,8 +1,9 @@
 
 USERNAME=achreto
 IMAGE=bf-gitlab-ci-runner
+BF_SOURCE=/path/to/barrelfish-src
 
-build: Dockerfile
+build: Dockerfile config.pp
 	docker build -t $(IMAGE) .
 
 tag:
@@ -14,3 +15,6 @@ publish: build
 
 login:
 	docker login $(USERNAME)
+
+compile:
+	docker run -u $$(id -u) --mount type=bind,source=$(BF_SOURCE),target=/source  $(IMAGE) /bin/sh -c '(cd /source/build && ../hake/hake.sh -s ../ -a armv8)'
