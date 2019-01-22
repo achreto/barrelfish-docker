@@ -51,6 +51,10 @@ exec { 'apt-update':
   command => '/usr/bin/apt-get update',
 }
 
+exec { 'mkdir-udev':
+  command => '/bin/mkdir -p /etc/udev/rules.d/',
+}
+
 class barrelfish_build {
   # Packages for building Barrelfish code
   $barrelfish_build_env = [
@@ -155,7 +159,7 @@ class util_packages {
 class docker_util_packages {
   $utils = [
     'git', 'conserver-client', 'syslinux-utils',  'wget',
-    'python-requests',
+    'python-requests', 'udev'
   ]
 
   package { 'syslinux':
@@ -294,13 +298,21 @@ node 'emmentaler3' {
 
 
 node 'default' {
+  file { "/etc/udev/rules.d/60-pandaboard.rules":
+    ensure => file,
+    require => Exec['mkdir-udev'],
+    mode   => "0644",
+    owner  => "root",
+    group  => "root",
+    source => "/60-pandaboard.rules",
+  }
   file { "/etc/apt/sources.list":
     ensure => file,
     mode   => "0644",
     owner  => "root",
     group  => "root",
     source => "/sources.list",
-  }
+  }  
   include barrelfish_build
   include docker_util_packages
 }
