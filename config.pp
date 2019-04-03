@@ -1,3 +1,6 @@
+#
+# Puppet configuration file for Barrelfish, Ubuntu 18.04 Version
+#
 
 # Config files that have to be available during boot
 define config_file_copy($filename = $title, $mode="0600", 
@@ -65,8 +68,8 @@ class barrelfish_build {
     'libghc-async-dev', 'gcc-arm-linux-gnueabi', 'g++-arm-linux-gnueabi',
     'libgmp3-dev', 'cabal-install', 'curl', 'freebsd-glue',
     'libelf-freebsd-dev', 'libusb-1.0-0-dev', 'gnu-efi:arm64',
-    'gcc-aarch64-linux-gnu', 'g++-aarch64-linux-gnu',
-    'gdb-multiarch', 'cpio',
+    'libefiboot-dev', 'gcc-aarch64-linux-gnu', 'g++-aarch64-linux-gnu',
+    'gdb-multiarch', 'cpio', 'libghc-aeson-pretty-dev', 'libghc-aeson-dev',
     # For gem5: libpython2.7, google's tcmalloc, protobuf
     'libpython2.7', 'libprotobuf10', 'libtcmalloc-minimal4',
   ]
