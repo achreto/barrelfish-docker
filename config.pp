@@ -70,6 +70,9 @@ class barrelfish_build {
     'libelf-freebsd-dev', 'libusb-1.0-0-dev', 'gnu-efi:arm64',
     'libefiboot-dev', 'gcc-aarch64-linux-gnu', 'g++-aarch64-linux-gnu',
     'gdb-multiarch', 'cpio', 'libghc-aeson-pretty-dev', 'libghc-aeson-dev',
+    'libghc-missingh-dev', 
+    # this package is not yet available ton ubuntu 18.04
+    # 'libghc-pretty-simple-dev',
     # For gem5: libpython2.7, google's tcmalloc, protobuf
     'libpython2.7', 'libprotobuf10', 'libtcmalloc-minimal4',
   ]
