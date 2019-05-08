@@ -16,5 +16,6 @@ publish: build
 login:
 	docker login $(USERNAME)
 
-compile:
-	docker run -u $$(id -u) --mount type=bind,source=$(BF_SOURCE),target=/source  $(IMAGE) /bin/sh -c '(cd /source/build && ../hake/hake.sh -s ../ -a armv8)'
+run:
+	docker run -u $$(id -u) -i -t \
+		--mount type=bind,source=$(CURDIR),target=/source $(IMAGE)
