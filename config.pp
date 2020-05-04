@@ -304,14 +304,6 @@ node 'emmentaler3' {
 
 
 node 'default' {
-  file { "/etc/udev/rules.d/60-pandaboard.rules":
-    ensure => file,
-    require => Exec['mkdir-udev'],
-    mode   => "0644",
-    owner  => "root",
-    group  => "root",
-    source => "/60-pandaboard.rules",
-  }
   file { "/etc/apt/sources.list":
     ensure => file,
     mode   => "0644",
